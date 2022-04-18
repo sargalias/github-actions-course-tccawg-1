@@ -1,0 +1,38 @@
+name: Context testing
+on: [push, pull_request]
+
+jobs:
+  functions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: dump
+        run: |
+          echo ${{ contains( 'hello', 'll' )}}
+          echo ${{ startsWith( 'hello', 'he' )}}
+          echo ${{ endsWith( 'hello', 'lo' )}}
+          echo ${{ format( 'Hello {0} {1} {2}', 'World', '!', '!' )}}
+  dump_contexts_to_log:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Manual failure
+        run: eccho foo
+      - name: Ignore with IF failure() expression
+        if: failure()
+        run: echo "This step only runs if the previous steps fail"
+      - name: Run always
+        if: always()
+        run: echo "This step should always run"
+      - name: Dump GitHub context
+        id: github_context_step
+        run: echo '${{ toJSON(github) }}'
+      - name: Dump job context
+        run: echo '${{ toJSON(job) }}'
+      - name: Dump steps context
+        run: echo '${{ toJSON(steps) }}'
+      - name: Dump runner context
+        run: echo '${{ toJSON(runner) }}'
+      - name: Dump strategy context
+        run: echo '${{ toJSON(strategy) }}'
+      - name: Dump matrix context
+        run: echo '${{ toJSON(matrix) }}'
