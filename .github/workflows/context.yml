@@ -15,8 +15,8 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: Manual failure
-        run: eccho foo
+      # - name: Manual failure
+      #   run: eccho foo
       - name: Ignore with IF failure() expression
         if: failure()
         run: echo "This step only runs if the previous steps fail"
